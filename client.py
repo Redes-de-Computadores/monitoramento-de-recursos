@@ -1,29 +1,41 @@
 import socket
+import threading
+import time
 
-from numpy import full
+SERVER = "10.2.170.35"
+PORT = 5050
+ADDR = (SERVER, PORT)
+FORMAT = 'utf-8'
 
-HEADERSIZE = 10
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client.connect(ADDR)
 
-soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-soc.connect((socket.gethostname(), 1234))
+def handle_messages():
+    while (True):
+        msg = client.recv(1024).decode()
+        separate_message = msg.split("=")
+        print(separate_message[1] + ": " + separate_message[2])
 
+def send(the_message):
+    client.send(the_message.encode(FORMAT))
 
-while True:
-    full_msg = ''
-    new_msg = True
-    while True:
-        msg = soc.recv(16)
-        if new_msg:
-            print(f"new message lenght: {msg[:HEADERSIZE]}")
-            msglen = int(msg[:HEADERSIZE])
-            new_msg = False
+def send_author():
+    name = input('Type ur name: ')
+    send("name=" + name)
 
-        full_msg += msg.decode("utf-8")
+def send_message():
+    while(True):   
+        the_message = input()
+        send("msg=" + the_message)
 
-        if len(full_msg)-HEADERSIZE == msglen:
-            print("full msg rcvd!")
-            print(full_msg[HEADERSIZE:])
-            new_msg = True
-            full_msg = ''
-        
-    print(full_msg)
+def init_sending():
+    send_author()
+    send_message()
+
+def start():
+    thread1 = threading.Thread(target=handle_messages)
+    thread2 = threading.Thread(target=init_sending)
+    thread1.start()
+    thread2.start()
+
+start()
