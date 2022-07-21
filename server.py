@@ -12,6 +12,7 @@ server.bind(ADDR)
 
 connections = []
 messages = []
+rsrc_request = []
 
 def send_individual_message(connection):
     print(f"[SENDING] Sending messages to {connection['addr']}")
@@ -49,12 +50,15 @@ def handle_clients(conn, addr):
             elif(requestion.startswith("rsrc=")):
                 separate_requestion = requestion.split("=")
                 resource = int(separate_requestion[1])
+                rsrc_request.append(resource)
                 print(resource)
                 # send_message_all()
             elif(requestion.startswith("type=")):
                 separate_requestion = requestion.split("=")
                 resource_type = int(separate_requestion[1])
+                rsrc_request.append(resource_type)
                 print(resource_type)
+            print(rsrc_request)
 
 
 def start():

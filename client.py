@@ -73,10 +73,6 @@ def resource_type(chosen_resource_option):
             ''')
         chosen_type = int(input('What\'s ur choice? '))
         
-        print('\n')
-
-        print(f'Ur choice was: {chosen_type}')
-
         if(chosen_type > 0 and chosen_type < 4):
             send(f"type={chosen_type}")
 
