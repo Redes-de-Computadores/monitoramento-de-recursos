@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+import monitor
 
 SERVER_IP = socket.gethostbyname(socket.gethostname())
 PORT = 5050
@@ -12,7 +13,7 @@ server.bind(ADDR)
 
 connections = []
 messages = []
-rsrc_request = []
+rsrc = 0
 
 def send_individual_message(connection):
     print(f"[SENDING] Sending messages to {connection['addr']}")
@@ -22,10 +23,10 @@ def send_individual_message(connection):
         connection['last'] = i+1
         time.sleep(0.3)
 
-def send_message_all():
-    global connections
-    for connection in connections:
-        send_individual_message(connection)
+# def send_message_all():
+#     global connections
+#     for connection in connections:
+#         send_individual_message(connection)
 
 def handle_clients(conn, addr):
     print(f"[NEW CONNECTION] A new user has connected by address: { addr }")
@@ -36,29 +37,25 @@ def handle_clients(conn, addr):
     while(True):
         requestion = conn.recv(1024).decode(FORMAT)
         if(requestion):
-            if(requestion.startswith("name=")):
-                separate_requestion = requestion.split("=")
-                name = separate_requestion[1]
-                connection_map = {
-                    "conn": conn, 
-                    "addr": addr, 
-                    "name": name, 
-                    "last": 0
-                }
-                connections.append(connection_map)
-                send_individual_message(connection_map)
-            elif(requestion.startswith("rsrc=")):
-                separate_requestion = requestion.split("=")
-                resource = int(separate_requestion[1])
-                rsrc_request.append(resource)
-                print(resource)
-                # send_message_all()
-            elif(requestion.startswith("type=")):
-                separate_requestion = requestion.split("=")
-                resource_type = int(separate_requestion[1])
-                rsrc_request.append(resource_type)
-                print(resource_type)
-            print(rsrc_request)
+            if(requestion == "1"):
+                print(monitor.mem())
+            elif(requestion == "2"):
+                print(monitor.cpu())
+            elif(requestion == "3"):
+                print(monitor.disk())
+
+
+            # if(requestion.startswith("name=")):
+            #     separate_requestion = requestion.split("=")
+            #     name = separate_requestion[1]
+            #     connection_map = {
+            #         "conn": conn, 
+            #         "addr": addr, 
+            #         "name": name, 
+            #         "last": 0
+            #     }
+            #     connections.append(connection_map)
+            #     send_individual_message(connection_map)
 
 
 def start():
