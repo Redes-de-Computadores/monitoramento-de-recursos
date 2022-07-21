@@ -1,27 +1,5 @@
-import socket
-import threading
 import time
 
-SERVER = "192.168.1.35"
-PORT = 5050
-ADDR = (SERVER, PORT)
-FORMAT = 'utf-8'
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-client.connect(ADDR)
-
-def handle_messages():
-    while (True):
-        msg = client.recv(1024).decode()
-        separate_message = msg.split("=")
-        print(separate_message[1] + ": " + separate_message[2])
-
-def send(the_message):
-    client.send(the_message.encode(FORMAT))
-
-def send_author():
-    name = input('Type ur name: ')
-    send("name=" + name)
 
 def resource_request():
     while True:     
@@ -37,30 +15,24 @@ def resource_request():
         ''')
         chosen_resource_option = int(input('What\'s ur choice? '))
         
-        if(chosen_resource_option > 0 and chosen_resource_option < 4):
-            send(f"rsrc={chosen_resource_option}")
-            resource_type(chosen_resource_option)
-
+        if(chosen_resource_option > 0 and chosen_resource_option < 3):
+            info_type(chosen_resource_option)
         elif(chosen_resource_option == 0):
             exit()
             break
-
         else:
             err()
 
-def resource_type(chosen_resource_option):
+def info_type(chosen_resource_option):
     resource = ''
     while True:
         time.sleep(1)
         if(chosen_resource_option == 1):
             resource = 'RAM Memory'
-
         elif (chosen_resource_option == 2):
             resource = 'CPU'
-
         elif (chosen_resource_option == 3):
             resource = 'GPU'
-
         print(f'''
             What type information u want to see:
 
@@ -72,25 +44,17 @@ def resource_type(chosen_resource_option):
             0.Voltar
             ''')
         chosen_type = int(input('What\'s ur choice? '))
-        
         print('\n')
 
         print(f'Ur choice was: {chosen_type}')
 
         if(chosen_type > 0 and chosen_type < 4):
-            send(f"type={chosen_type}")
-
+            info_type(chosen_resource_option)
         elif(chosen_type == 0):
             print('Getting back to the Menu...')
             break
-
         else:
             err()
-
-def init():
-    send_author()
-    resource_request()
-    resource_type()
 
 def err():
     print('''
@@ -114,9 +78,6 @@ def start():
     Welcome to Server Resources Monitorer
     =====================================
     ''')
-    thread1 = threading.Thread(target=handle_messages)
-    thread2 = threading.Thread(target=init)
-    thread1.start()
-    thread2.start()
+    resource_request()
 
 start()

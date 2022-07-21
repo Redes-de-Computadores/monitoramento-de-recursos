@@ -33,11 +33,11 @@ def handle_clients(conn, addr):
     name = False
 
     while(True):
-        msg = conn.recv(1024).decode(FORMAT)
-        if(msg):
-            if(msg.startswith("name=")):
-                separate_message = msg.split("=")
-                name = separate_message[1]
+        requestion = conn.recv(1024).decode(FORMAT)
+        if(requestion):
+            if(requestion.startswith("name=")):
+                separate_requestion = requestion.split("=")
+                name = separate_requestion[1]
                 connection_map = {
                     "conn": conn, 
                     "addr": addr, 
@@ -46,11 +46,16 @@ def handle_clients(conn, addr):
                 }
                 connections.append(connection_map)
                 send_individual_message(connection_map)
-            elif(msg.startswith("msg=")):
-                separate_message = msg.split("=")
-                the_message = name + "=" + separate_message[1]
-                messages.append(the_message)
-                send_message_all()
+            elif(requestion.startswith("rsrc=")):
+                separate_requestion = requestion.split("=")
+                resource = int(separate_requestion[1])
+                print(resource)
+                # send_message_all()
+            elif(requestion.startswith("type=")):
+                separate_requestion = requestion.split("=")
+                resource_type = int(separate_requestion[1])
+                print(resource_type)
+
 
 def start():
     print("[STARTING] Starting Socket!")
