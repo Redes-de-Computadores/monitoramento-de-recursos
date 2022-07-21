@@ -12,9 +12,14 @@ client.connect(ADDR)
 
 def handle_messages():
     while (True):
-        msg = client.recv(1024).decode()
-        separate_message = msg.split("=")
-        print(separate_message[1] + ": " + separate_message[2])
+        fullresponse = client.recv(1024).decode()
+        rscrs = fullresponse.split(";")
+        print(f'''
+        {rscrs[0]}
+        {rscrs[1]}
+        {rscrs[2]}
+        {rscrs[3]}
+        ''')
 
 def send(requestion):
     client.send(requestion.encode(FORMAT))

@@ -12,7 +12,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
 connections = []
-messages = []
+resources = []
 rsrc = 0
 
 def send_individual_message(connection):
@@ -22,6 +22,17 @@ def send_individual_message(connection):
         connection['conn'].send(send_message.encode())
         connection['last'] = i+1
         time.sleep(0.3)
+
+def send_resources(connection):
+    print(f"[SENDING] Sending response to {connection['addr']}")
+    for i in range(connection['last'], len(resources)):
+        send_resource = "resource=" + resources[i]
+        connection['conn'].send(send_resource.encode())
+        connection['last'] = i+1
+        time.sleep(0.3)
+
+    
+
 
 # def send_message_all():
 #     global connections
@@ -39,10 +50,24 @@ def handle_clients(conn, addr):
         if(requestion):
             if(requestion == "1"):
                 print(monitor.mem())
+                resource = monitor.mem()
             elif(requestion == "2"):
                 print(monitor.cpu())
+                resource = monitor.cpu()
             elif(requestion == "3"):
                 print(monitor.disk())
+                resource = monitor.disk()
+            
+            connection_map = {
+                "conn": conn,
+                "addr": addr,
+                "last": 0,
+                "resource": resource
+            }
+
+            connections.append(connection_map)
+            resources.append(resource)
+            send_resources(connection_map)
 
 
             # if(requestion.startswith("name=")):
