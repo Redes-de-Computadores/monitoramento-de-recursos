@@ -2,7 +2,7 @@ import socket
 import threading
 import time
 
-SERVER = "10.2.170.35"
+SERVER = "192.168.1.35"
 PORT = 5050
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
@@ -10,31 +10,86 @@ FORMAT = 'utf-8'
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
-def handle_messages():
-    while (True):
-        msg = client.recv(1024).decode()
-        separate_message = msg.split("=")
-        print(separate_message[1] + ": " + separate_message[2])
+rsrcs = []
 
-def send(the_message):
-    client.send(the_message.encode(FORMAT))
+# def formated_response(response):
+#     print(f"""
+#     ===============
+#       {response[0]} Info
+#     ===============
+#     """)
+#     for i in range(1, len(response)):
+#         print(response[i])
 
-def send_author():
-    name = input('Type ur name: ')
-    send("name=" + name)
 
-def send_message():
-    while(True):   
-        the_message = input()
-        send("msg=" + the_message)
 
-def init_sending():
-    send_author()
-    send_message()
+def handle_response():
+    while True:
+        fullresponse = client.recv(1024).decode()
+        rsrcs = fullresponse.split(";")
+
+        print("\n\n=============================")       
+        print(f"""
+          {rsrcs[0]} Info
+        """)
+        print("=============================")       
+        for i in range(1, len(rsrcs)):
+            print("  " + rsrcs[i]) 
+        print("=============================")       
+
+
+def send(requestion):
+    client.send(requestion.encode(FORMAT))
+
+
+def resource_request():
+    while True:
+        time.sleep(1.5)     
+        print('''
+        For a server resource checking choose:
+
+        1.RAM Memory
+        2.CPU
+        3.Disk
+        0.Exit
+        ''')
+        chosen_resource_option = int(input('What\'s ur choice? '))
+        
+        if(chosen_resource_option > 0 and chosen_resource_option < 4):
+            send(str(chosen_resource_option))
+
+        elif(chosen_resource_option == 0):
+            exit()
+            break
+
+        else:
+            err()
+
+def err():
+    print('''
+    ===================
+      Invalid Option!
+    ===================
+    ''')
+    time.sleep(1)
+
+def exit():
+    print('''
+    ===================
+        Bye Bye! ✌️
+      See u next time
+    ===================
+    ''')
+    time.sleep(1)
 
 def start():
-    thread1 = threading.Thread(target=handle_messages)
-    thread2 = threading.Thread(target=init_sending)
+    print('''
+    =========================================
+      Welcome to Server Resources Monitorer
+    =========================================
+    ''')
+    thread1 = threading.Thread(target=handle_response)
+    thread2 = threading.Thread(target=resource_request)
     thread1.start()
     thread2.start()
 

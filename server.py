@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+import monitor
 
 SERVER_IP = socket.gethostbyname(socket.gethostname())
 PORT = 5050
@@ -11,46 +12,44 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
 
 connections = []
-messages = []
+resources = []
 
-def send_individual_message(connection):
-    print(f"[SENDING] Sending messages to {connection['addr']}")
-    for i in range(connection['last'], len(messages)):
-        send_message = "msg=" + messages[i]
-        connection['conn'].send(send_message.encode())
+def send_resources(connection):
+    print(f"[SENDING] Sending response to {connection['addr']}")
+    for i in range(connection['last'], len(resources)):
+        send_resource = resources[i]
+        connection['conn'].send(send_resource.encode())
         connection['last'] = i+1
         time.sleep(0.3)
-
-def send_message_all():
-    global connections
-    for connection in connections:
-        send_individual_message(connection)
+        resources.clear()
+        print(send_resource)
 
 def handle_clients(conn, addr):
     print(f"[NEW CONNECTION] A new user has connected by address: { addr }")
     global connections
-    global messages
-    name = False
+    global resources
 
     while(True):
-        msg = conn.recv(1024).decode(FORMAT)
-        if(msg):
-            if(msg.startswith("name=")):
-                separate_message = msg.split("=")
-                name = separate_message[1]
-                connection_map = {
-                    "conn": conn, 
-                    "addr": addr, 
-                    "name": name, 
-                    "last": 0
-                }
-                connections.append(connection_map)
-                send_individual_message(connection_map)
-            elif(msg.startswith("msg=")):
-                separate_message = msg.split("=")
-                the_message = name + "=" + separate_message[1]
-                messages.append(the_message)
-                send_message_all()
+        requestion = conn.recv(1024).decode(FORMAT)
+        if(requestion):
+            if(requestion == "1"):
+                resource = monitor.mem()
+            elif(requestion == "2"):
+                resource = monitor.cpu()
+            elif(requestion == "3"):
+                resource = monitor.disk()
+            
+            connection_map = {
+                "conn": conn,
+                "addr": addr,
+                "last": 0,
+                "resource": resource
+            }
+
+            connections.append(connection_map)
+            resources.append(resource)
+            print(resources)
+            send_resources(connection_map)
 
 def start():
     print("[STARTING] Starting Socket!")
