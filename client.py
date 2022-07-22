@@ -2,7 +2,7 @@ import socket
 import threading
 import time
 
-SERVER = "192.168.1.106"
+SERVER = "192.168.1.35"
 PORT = 5050
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
@@ -10,25 +10,41 @@ FORMAT = 'utf-8'
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
-def handle_messages():
-    while (True):
+rsrcs = []
+
+# def formated_response(response):
+#     print(f"""
+#     ===============
+#       {response[0]} Info
+#     ===============
+#     """)
+#     for i in range(1, len(response)):
+#         print(response[i])
+
+
+
+def handle_response():
+    while True:
         fullresponse = client.recv(1024).decode()
-        rscrs = fullresponse.split(";")
-        print(f'''
-        {rscrs[0]}
-        {rscrs[1]}
-        {rscrs[2]}
-        {rscrs[3]}
-        ''')
+        rsrcs = fullresponse.split(";")
+
+        print("\n\n=============================")       
+        print(f"""
+          {rsrcs[0]} Info
+        """)
+        print("=============================")       
+        for i in range(1, len(rsrcs)):
+            print("  " + rsrcs[i]) 
+        print("=============================")       
+
 
 def send(requestion):
     client.send(requestion.encode(FORMAT))
 
 
 def resource_request():
-    while True:     
-        time.sleep(1) 
-
+    while True:
+        time.sleep(1.5)     
         print('''
         For a server resource checking choose:
 
@@ -72,7 +88,7 @@ def start():
       Welcome to Server Resources Monitorer
     =========================================
     ''')
-    thread1 = threading.Thread(target=handle_messages)
+    thread1 = threading.Thread(target=handle_response)
     thread2 = threading.Thread(target=resource_request)
     thread1.start()
     thread2.start()

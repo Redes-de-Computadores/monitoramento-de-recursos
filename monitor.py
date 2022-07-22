@@ -10,29 +10,29 @@ def set_size(bytes, suffix="B"):
 def mem():
     mem = psutil.virtual_memory()
 
-    total = "total=" + str(set_size(mem.total))
-    free = "free=" + str(set_size(mem.free))
-    used = "used=" + str(set_size(mem.used))
-    percent = "percent=" + str(mem.percent) + "%"
+    total = "Total: " + str(set_size(mem.total))
+    free = "Free: " + str(set_size(mem.free))
+    used = "In Use: " + str(set_size(mem.used))
+    percent = "Percentage of Use: " + str(mem.percent) + "%"
 
-    mem_data = total + ";" + free + ";" + used + ";" + percent
+    mem_data = "Memory" + ";" + total + ";" + free + ";" + used + ";" + percent
     return mem_data
 
 def cpu():
-    logical = "logical=" + str(psutil.cpu_count())
-    nonlogical = "nonlogical=" + str(psutil.cpu_count(logical=False))
-    percent = "percent=" + str(psutil.cpu_percent(interval=1)) + "%"
+    logical = "Logical Cores: " + str(psutil.cpu_count())
+    nonlogical = "Non-Logical Cores:" + str(psutil.cpu_count(logical=False))
+    percent = "Percentage of Use: " + str(psutil.cpu_percent(interval=1)) + "%"
 
-    cpu_data = logical + ";" + nonlogical + ";" + percent
+    cpu_data = "CPU" + ";" + logical + ";" + nonlogical + ";" + percent
     return cpu_data
 
 def disk():
     disk = psutil.disk_usage('C:\\')
 
-    total = "total=" + str(set_size(disk.total))
-    free = "free=" + str(set_size(disk.free))
-    used = "used=" + str(set_size(disk.used))
-    percentage = "percent=" + str(disk.percent) + '%'
+    total = "Total: " + str(set_size(disk.total))
+    free = "Free: " + str(set_size(disk.free))
+    used = "In Use: " + str(set_size(disk.used))
+    percentage = "Percentage of Use: " + str(disk.percent) + '%'
 
-    disk_data = total + ";" + free + ";" + used + ";" + percentage
+    disk_data = "Disk" + ";" + total + ";" + free + ";" + used + ";" + percentage
     return disk_data

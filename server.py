@@ -13,49 +13,30 @@ server.bind(ADDR)
 
 connections = []
 resources = []
-rsrc = 0
-
-def send_individual_message(connection):
-    print(f"[SENDING] Sending messages to {connection['addr']}")
-    for i in range(connection['last'], len(messages)):
-        send_message = "msg=" + messages[i]
-        connection['conn'].send(send_message.encode())
-        connection['last'] = i+1
-        time.sleep(0.3)
 
 def send_resources(connection):
     print(f"[SENDING] Sending response to {connection['addr']}")
     for i in range(connection['last'], len(resources)):
-        send_resource = "resource=" + resources[i]
+        send_resource = resources[i]
         connection['conn'].send(send_resource.encode())
         connection['last'] = i+1
         time.sleep(0.3)
-
-    
-
-
-# def send_message_all():
-#     global connections
-#     for connection in connections:
-#         send_individual_message(connection)
+        resources.clear()
+        print(send_resource)
 
 def handle_clients(conn, addr):
     print(f"[NEW CONNECTION] A new user has connected by address: { addr }")
     global connections
-    global messages
-    name = False
+    global resources
 
     while(True):
         requestion = conn.recv(1024).decode(FORMAT)
         if(requestion):
             if(requestion == "1"):
-                print(monitor.mem())
                 resource = monitor.mem()
             elif(requestion == "2"):
-                print(monitor.cpu())
                 resource = monitor.cpu()
             elif(requestion == "3"):
-                print(monitor.disk())
                 resource = monitor.disk()
             
             connection_map = {
@@ -67,21 +48,8 @@ def handle_clients(conn, addr):
 
             connections.append(connection_map)
             resources.append(resource)
+            print(resources)
             send_resources(connection_map)
-
-
-            # if(requestion.startswith("name=")):
-            #     separate_requestion = requestion.split("=")
-            #     name = separate_requestion[1]
-            #     connection_map = {
-            #         "conn": conn, 
-            #         "addr": addr, 
-            #         "name": name, 
-            #         "last": 0
-            #     }
-            #     connections.append(connection_map)
-            #     send_individual_message(connection_map)
-
 
 def start():
     print("[STARTING] Starting Socket!")
