@@ -22,7 +22,6 @@ def send_resources(connection):
         connection['last'] = i+1
         time.sleep(0.3)
         resources.clear()
-        print(send_resource)
 
 def handle_clients(conn, addr):
     print(f"[NEW CONNECTION] A new user has connected by address: { addr }")
@@ -48,7 +47,6 @@ def handle_clients(conn, addr):
 
             connections.append(connection_map)
             resources.append(resource)
-            print(resources)
             send_resources(connection_map)
 
 def start():
