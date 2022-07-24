@@ -1,5 +1,9 @@
 import psutil
 
+# Method set_size() performs the formatting of sizes, in KB, MB, GB, TB and PB.
+# @param bytes receives the value to be transformed.
+# @param suffix saves the letter "B" which will complete the unit abbreviation
+# return returns the value already transformed
 def set_size(bytes, suffix="B"):
     factor = 1024
     for unit in ["", "K", "M", "G", "T", "P"]:
@@ -7,6 +11,11 @@ def set_size(bytes, suffix="B"):
             return f"{bytes: .2f}{unit}{suffix}"
         bytes /= factor
 
+# Method that returns memory resources, via the psutil library, 
+# and uses the set_size() method to format the data.
+# Receives the information for total, free, in-use memory, 
+# and percentage of use, and then compress the information into a variable.
+# return returns the variable with the information.
 def mem():
     mem = psutil.virtual_memory()
 
@@ -18,6 +27,11 @@ def mem():
     mem_data = "Memory" + ";" + total + ";" + free + ";" + used + ";" + percent
     return mem_data
 
+
+# Method that returns cpu resources, via the psutil library.
+# Receives information for logical, non-logical cores, and percentage of use,
+# and then compress the information into a variable.
+# return returns the variable with the information.
 def cpu():
     logical = "Logical Cores: " + str(psutil.cpu_count())
     nonlogical = "Non-Logical Cores:" + str(psutil.cpu_count(logical=False))
@@ -26,6 +40,11 @@ def cpu():
     cpu_data = "CPU" + ";" + logical + ";" + nonlogical + ";" + percent
     return cpu_data
 
+# Method that returns disk usage resources, via the psutil library, 
+# and uses the set_size() method to format the data.
+# Receives the information for total, free, in-use disk, 
+# and percentage of use, and then compress the information into a variable.
+# return returns the variable with the information.
 def disk():
     disk = psutil.disk_usage('C:\\')
 

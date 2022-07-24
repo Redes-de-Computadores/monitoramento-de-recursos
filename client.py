@@ -12,17 +12,6 @@ client.connect(ADDR)
 
 rsrcs = []
 
-# def formated_response(response):
-#     print(f"""
-#     ===============
-#       {response[0]} Info
-#     ===============
-#     """)
-#     for i in range(1, len(response)):
-#         print(response[i])
-
-
-
 def handle_response():
     while True:
         fullresponse = client.recv(1024).decode()
