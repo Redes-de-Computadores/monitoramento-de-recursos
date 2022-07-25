@@ -64,10 +64,10 @@ def err():
 
 def exit():
     print('''
-    ===================
-        Bye Bye! ✌️
-      See u next time
-    ===================
+    ====================
+         Bye Bye✌️   
+      See u next time!
+    ====================
     ''')
     time.sleep(1)
 
