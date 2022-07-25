@@ -4,7 +4,7 @@ import time
 
 # Variables that keeps the ip, port and format to encode message that will be sended
 # ADDR variable receives the ip and port to guard the address information
-SERVER = "192.168.1.35"
+SERVER = input('What\'s server IP:')
 PORT = 5050
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
