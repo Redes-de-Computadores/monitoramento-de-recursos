@@ -7,6 +7,7 @@ import monitor
 # another variable called "ADDR", and set the uft-8 format to a 
 # variable that will be used to encode the message that will be 
 # send to the client.
+input('Press enter to start the server.')
 SERVER_IP = socket.gethostbyname(socket.gethostname())
 PORT = 5050
 ADDR = (SERVER_IP, PORT)
@@ -16,6 +17,7 @@ FORMAT = 'utf-8'
 # And then assigns the IP address and the port number to a socket instance using bind(ADDR) method.
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind(ADDR)
+print(f"[STARTED] Server started at: { ADDR } 🔥")
 
 connections = []
 
