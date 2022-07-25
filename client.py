@@ -2,11 +2,16 @@ import socket
 import threading
 import time
 
+# Variables that keeps the ip, port and format to encode message that will be sended
+# ADDR variable receives the ip and port to guard the address information
 SERVER = "192.168.1.35"
 PORT = 5050
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 
+# Variable receives instance of the socket using AF_INET (ipv4) 
+# and SOCK_STREAM (TCP Protocol). And then uses the uses the address
+# to conect to the server.
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect(ADDR)
 
